@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $title = 'Dashboard';
+    return view('welcome', compact('title'));
 });
 
 require __DIR__ . '/auth.php';
