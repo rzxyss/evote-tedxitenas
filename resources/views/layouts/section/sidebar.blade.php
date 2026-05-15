@@ -14,16 +14,16 @@
 
         <li class="menu-item has-submenu" role="none">
             <a href="#" role="menuitem" title="Master Data"
-                class="menu-link @if (request()->routeIs('master-data.permissions.*')) active @endif">
+                class="menu-link @if (request()->routeIs('master-data.permissions.*') || request()->routeIs('master-data.roles.*')) active @endif">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
                 </svg>
                 <span class="label">Master Data</span>
-                <span class="arrow" @if (request()->routeIs('master-data.permissions.*')) style="transform: rotate(90deg)" @endif>›</span>
+                <span class="arrow" @if (request()->routeIs('master-data.permissions.*') || request()->routeIs('master-data.roles.*')) style="transform: rotate(90deg)" @endif>›</span>
             </a>
-            <ul class="submenu" @if (request()->routeIs('master-data.permissions.*')) style="display: block;" @endif>
+            <ul class="submenu" @if (request()->routeIs('master-data.permissions.*') || request()->routeIs('master-data.roles.*')) style="display: block;" @endif>
                 <li>
                     <a href="{{ route('master-data.permissions.index') }}"
                         class="@if (request()->routeIs('master-data.permissions.*')) active @endif" title="Permissions">
@@ -37,7 +37,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="project-create.html" title="Roles">
+                    <a href="{{ route('master-data.roles.index') }}"
+                        class="@if (request()->routeIs('master-data.roles.*')) active @endif" title="Roles">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
