@@ -37,6 +37,9 @@
                         <li class="submenu-item @if (request()->routeIs('master-data.account.*')) active @endif">
                             <a href="{{ route('master-data.account.index') }}">Account</a>
                         </li>
+                        <li class="submenu-item @if (request()->routeIs('master-data.candidates.*')) active @endif">
+                            <a href="{{ route('master-data.candidates.index') }}">Candidates</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

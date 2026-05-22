@@ -11,12 +11,9 @@
                 <form action="{{ route('master-data.roles.store') }}" method="POST">
                     @csrf
                     <p>1. Role Information</p>
-                    <div class="row">
-                        <div class="form-group">
-                            <label>Role Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                placeholder="ex: admin">
-                        </div>
+                    <div class="form-group">
+                        <label>Role Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="ex: admin">
                     </div>
                     <hr>
                     <p>2. Permissions</p>
