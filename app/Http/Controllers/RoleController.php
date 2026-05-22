@@ -12,7 +12,7 @@ class RoleController extends Controller
     {
         $data = [
             'title' => 'Roles',
-            'roles' => Role::with('permissions')->paginate(10),
+            'role' => Role::with('permissions')->get(),
         ];
 
         return view('content.role.index', $data);
@@ -21,8 +21,11 @@ class RoleController extends Controller
     public function create()
     {
         $data = [
-            'title' => 'Create Role',
-            'permissions' => Permission::orderBy('name')->get(),
+            'title' => 'Roles',
+            'permissions' => Permission::orderBy('name')->get()
+                ->groupBy(function ($permission) {
+                    return explode('_', $permission->name)[0];
+                }),
         ];
 
         return view('content.role.create', $data);
@@ -54,11 +57,18 @@ class RoleController extends Controller
     public function edit($id)
     {
         $id = decrypt($id);
+
         $role = Role::with('permissions')->findOrFail($id);
+
         $data = [
             'title' => 'Edit Role',
             'role' => $role,
-            'permissions' => Permission::orderBy('name')->get(),
+
+            'permissions' => Permission::orderBy('name')->get()
+                ->groupBy(function ($permission) {
+                    return explode('_', $permission->name)[0];
+                }),
+
             'rolePermissions' => $role->permissions->pluck('name')->toArray(),
         ];
 

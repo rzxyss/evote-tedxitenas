@@ -11,7 +11,7 @@ class PermissionController extends Controller
     {
         $data = [
             'title' => 'Permissions',
-            'permission' => Permission::paginate(10),
+            'permission' => Permission::all(),
         ];
         return view('content.permission.index', $data);
     }
@@ -19,7 +19,7 @@ class PermissionController extends Controller
     public function create()
     {
         $data = [
-            'title' => 'Create Permission',
+            'title' => 'Permission',
         ];
         return view('content.permission.create', $data);
     }

@@ -1,134 +1,93 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="page-header">
-        <div class="page-title">
-            <h1>{{ $title ?? 'Edit Role' }}</h1>
-            <p>Update the role data as needed.</p>
-        </div>
-    </div>
-
-    <div class="form-card">
-        <div class="form-header">
-            <h5 class="form-title">
-                <i class="bi bi-person-badge"></i>
-                Detail Role
-            </h5>
-            <p class="form-subtitle">Use a clear role name for easy management.</p>
-        </div>
-
-        <form method="POST" action="{{ route('master-data.roles.update', encrypt($role->id)) }}">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label for="name" class="form-label">
-                    Name <span class="required">*</span>
-                </label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="example: admin"
-                    value="{{ old('name', $role->name) }}" required>
-                @error('name')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Form Edit {{ $title }}</h4>
             </div>
 
-            <div class="form-group">
-                <div class="d-flex justify-content-between align-items-center">
-                    <label class="form-label mb-0">Permissions</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="select_all_permissions">
-                        <label class="form-check-label" for="select_all_permissions">Select All</label>
-                    </div>
-                </div>
-
-                @php
-                    $selectedPermissions = old('permissions', $rolePermissions ?? []);
-                    $groupedPermissions = collect($permissions ?? [])->groupBy(function ($permission) {
-                        $normalized = str_replace('.', '_', $permission->name);
-                        $parts = explode('_', $normalized);
-                        $groupKey = count($parts) > 1 ? implode('_', array_slice($parts, 0, -1)) : $normalized;
-                        return strtoupper($groupKey);
-                    });
-                @endphp
-
-                @forelse($groupedPermissions as $groupName => $groupItems)
-                    <div class="border-bottom py-2">
-                        <div class="text-uppercase fw-semibold small mb-2">{{ $groupName }}</div>
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach ($groupItems as $permission)
-                                @php($isChecked = in_array($permission->name, $selectedPermissions))
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="permissions[]"
-                                        id="permission_{{ $permission->id }}" value="{{ $permission->name }}"
-                                        {{ $isChecked ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="permission_{{ $permission->id }}">
-                                        {{ $permission->name }}
-                                    </label>
-                                </div>
-                            @endforeach
+            <div class="card-body">
+                <form action="{{ route('master-data.roles.update', encrypt($role->id)) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Role Name</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ old('name', $role->name) }}" placeholder="ex: admin">
                         </div>
                     </div>
-                @empty
-                    <span class="text-muted">No permissions available.</span>
-                @endforelse
-                @error('permissions')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-                @error('permissions.*')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                    <div class="table-responsive">
+                        <table class="table table-lg">
+                            <thead>
+                                <tr>
+                                    <th><strong>Permission</strong></th>
+                                    <th><input class="form-check-input" type="checkbox" id="select-all"> Select All</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($permissions as $group => $items)
+                                    <tr>
+                                        <td>{{ ucfirst($group) }}</td>
+                                        <td>
+                                            @foreach ($items as $permission)
+                                                <div>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[]"
+                                                        value="{{ $permission->name }}" id="perm{{ $permission->id }}"
+                                                        {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
+
+                                                    <label class="form-check-label" for="perm{{ $permission->id }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ route('master-data.roles.index') }}" class="btn btn-danger">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
+        </div>
+    </section>
+@endsection
+@push('scripts')
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const selectAll = document.getElementById('select-all');
 
-            <div class="d-flex gap-1 justify-content-end">
-                <a href="{{ route('master-data.roles.index') }}" class="btn-outline">
-                    Cancel
-                </a>
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-save"></i>
-                    Save
-                </button>
-            </div>
-        </form>
-    </div>
+                const permissionCheckboxes = document.querySelectorAll(
+                    'input[name="permissions[]"]'
+                );
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var selectAll = document.getElementById('select_all_permissions');
-            if (!selectAll) {
-                return;
-            }
+                function updateSelectAllState() {
+                    const total = permissionCheckboxes.length;
+                    const checked = document.querySelectorAll(
+                        'input[name="permissions[]"]:checked'
+                    ).length;
 
-            var permissionInputs = Array.from(
-                document.querySelectorAll('input[name="permissions[]"]')
-            );
-
-            var syncSelectAllState = function() {
-                if (permissionInputs.length === 0) {
-                    selectAll.checked = false;
-                    selectAll.indeterminate = false;
-                    return;
+                    selectAll.checked = total === checked;
                 }
 
-                var checkedCount = permissionInputs.filter(function(input) {
-                    return input.checked;
-                }).length;
+                updateSelectAllState();
 
-                selectAll.checked = checkedCount === permissionInputs.length;
-                selectAll.indeterminate = checkedCount > 0 && checkedCount < permissionInputs.length;
-            };
-
-            selectAll.addEventListener('change', function() {
-                permissionInputs.forEach(function(input) {
-                    input.checked = selectAll.checked;
+                selectAll.addEventListener('change', function() {
+                    permissionCheckboxes.forEach(function(checkbox) {
+                        checkbox.checked = selectAll.checked;
+                    });
                 });
-                syncSelectAllState();
-            });
 
-            permissionInputs.forEach(function(input) {
-                input.addEventListener('change', syncSelectAllState);
+                permissionCheckboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        updateSelectAllState();
+                    });
+                });
             });
-
-            syncSelectAllState();
-        });
-    </script>
-@endsection
+        </script>
+    @endpush
+@endpush

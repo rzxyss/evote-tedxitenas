@@ -1,46 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="page-header">
-        <div class="page-title">
-            <h1>{{ $title ?? 'Edit Permission' }}</h1>
-            <p>Update the permission data as needed.</p>
-        </div>
-    </div>
-
-    <div class="form-card">
-        <div class="form-header">
-            <h5 class="form-title">
-                <i class="bi bi-shield-lock"></i>
-                Detail Permission
-            </h5>
-            <p class="form-subtitle">Use a clear name for easy management.</p>
-        </div>
-
-        <form method="POST" action="{{ route('master-data.permissions.update', encrypt($permission->id)) }}">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label for="name" class="form-label">
-                    Name <span class="required">*</span>
-                </label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="example: users.create"
-                    value="{{ old('name', $permission->name) }}" required>
-                @error('name')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Form Edit {{ $title }}</h4>
             </div>
 
-            <div class="d-flex gap-1 justify-content-end">
-                <a href="{{ route('master-data.permissions.index') }}" class="btn-outline">
-                    Cancel
-                </a>
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-save"></i>
-                    Save
-                </button>
+            <div class="card-body">
+                <form action="{{ route('master-data.permissions.update', encrypt($permission->id)) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Permission Name</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="ex: view_users" value="{{ old('name', $permission->name) }}">
+                        </div>
+                    </div>
+                    <a href="{{ route('master-data.permissions.index') }}" class="btn btn-danger">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
-        </form>
-    </div>
+        </div>
+    </section>
 @endsection
