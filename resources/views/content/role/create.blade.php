@@ -13,8 +13,9 @@
                     <p>1. Role Information</p>
                     <div class="row">
                         <div class="form-group">
-                            <label>Role Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="ex: admin">
+                            <label>Role Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="ex: admin">
                         </div>
                     </div>
                     <hr>

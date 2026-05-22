@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/vendors/choices.js/choices.min.css" />
 
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/iconly/bold.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/simple-datatables/style.css">
@@ -47,6 +48,7 @@
     <script src="{{ asset('assets') }}/vendors/apexcharts/apexcharts.js"></script>
     <script src="{{ asset('assets') }}/js/pages/dashboard.js"></script>
     <script src="{{ asset('assets') }}/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="{{ asset('assets') }}/vendors/choices.js/choices.min.js"></script>
 
     @stack('scripts')
     <script src="{{ asset('assets') }}/js/main.js"></script>

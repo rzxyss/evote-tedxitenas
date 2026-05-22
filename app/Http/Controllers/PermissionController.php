@@ -19,7 +19,7 @@ class PermissionController extends Controller
     public function create()
     {
         $data = [
-            'title' => 'Permission',
+            'title' => 'Permissions',
         ];
         return view('content.permission.create', $data);
     }
@@ -47,7 +47,7 @@ class PermissionController extends Controller
     {
         $id = decrypt($id);
         $data = [
-            'title' => 'Edit Permission',
+            'title' => 'Permissions',
             'permission' => Permission::findOrFail($id),
         ];
 

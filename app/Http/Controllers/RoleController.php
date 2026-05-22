@@ -61,7 +61,7 @@ class RoleController extends Controller
         $role = Role::with('permissions')->findOrFail($id);
 
         $data = [
-            'title' => 'Edit Role',
+            'title' => 'Roles',
             'role' => $role,
 
             'permissions' => Permission::orderBy('name')->get()
