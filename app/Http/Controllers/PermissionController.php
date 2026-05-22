@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
@@ -30,12 +31,16 @@ class PermissionController extends Controller
             'name' => 'required|string|unique:permissions,name',
         ]);
 
-        Permission::create([
-            'name' => $request->name,
-            'guard_name' => 'web',
-        ]);
+        try {
+            Permission::create([
+                'name' => $request->name,
+                'guard_name' => 'web',
+            ]);
 
-        return redirect()->route('master-data.permissions.index')->with('success', 'Permission created successfully.');
+            return redirect()->route('master-data.permissions.index')->with('success', 'Permission created successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create permission: ' . $e->getMessage()]);
+        }
     }
 
     public function show($id)
@@ -61,20 +66,28 @@ class PermissionController extends Controller
             'name' => 'required|string|unique:permissions,name,' . $id,
         ]);
 
-        $permission = Permission::findOrFail($id);
-        $permission->update([
-            'name' => $request->name,
-        ]);
+        try {
+            $permission = Permission::findOrFail($id);
+            $permission->update([
+                'name' => $request->name,
+            ]);
 
-        return redirect()->route('master-data.permissions.index')->with('success', 'Permission updated successfully.');
+            return redirect()->route('master-data.permissions.index')->with('success', 'Permission updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update permission: ' . $e->getMessage()]);
+        }
     }
 
     public function destroy($id)
     {
         $id = decrypt($id);
-        $permission = Permission::findOrFail($id);
-        $permission->delete();
+        try {
+            $permission = Permission::findOrFail($id);
+            $permission->delete();
 
-        return redirect()->route('master-data.permissions.index')->with('success', 'Permission deleted successfully.');
+            return redirect()->route('master-data.permissions.index')->with('success', 'Permission deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to delete permission: ' . $e->getMessage()]);
+        }
     }
 }

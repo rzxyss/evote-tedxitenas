@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -39,14 +40,18 @@ class RoleController extends Controller
             'permissions.*' => 'string|exists:permissions,name',
         ]);
 
-        $role = Role::create([
-            'name' => $request->name,
-            'guard_name' => 'web',
-        ]);
+        try {
+            $role = Role::create([
+                'name' => $request->name,
+                'guard_name' => 'web',
+            ]);
 
-        $role->syncPermissions($request->permissions ?? []);
+            $role->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('master-data.roles.index')->with('success', 'Role created successfully.');
+            return redirect()->route('master-data.roles.index')->with('success', 'Role created successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create role: ' . $e->getMessage()]);
+        }
     }
 
     public function show($id)
@@ -84,22 +89,30 @@ class RoleController extends Controller
             'permissions.*' => 'string|exists:permissions,name',
         ]);
 
-        $role = Role::findOrFail($id);
-        $role->update([
-            'name' => $request->name,
-        ]);
+        try {
+            $role = Role::findOrFail($id);
+            $role->update([
+                'name' => $request->name,
+            ]);
 
-        $role->syncPermissions($request->permissions ?? []);
+            $role->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('master-data.roles.index')->with('success', 'Role updated successfully.');
+            return redirect()->route('master-data.roles.index')->with('success', 'Role updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update role: ' . $e->getMessage()]);
+        }
     }
 
     public function destroy($id)
     {
         $id = decrypt($id);
-        $role = Role::findOrFail($id);
-        $role->delete();
+        try {
+            $role = Role::findOrFail($id);
+            $role->delete();
 
-        return redirect()->route('master-data.roles.index')->with('success', 'Role deleted successfully.');
+            return redirect()->route('master-data.roles.index')->with('success', 'Role deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to delete role: ' . $e->getMessage()]);
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -39,20 +40,24 @@ class AccountController extends Controller
             'role' => 'required|exists:roles,name',
         ]);
 
-        if ($request->hasFile('photo')) {
-            $photoName = $this->storeUploadedFile($request->file('photo'), $request->name);
+        try {
+            if ($request->hasFile('photo')) {
+                $photoName = $this->storeUploadedFile($request->file('photo'), $request->name);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'photo' => $photoName ?? null,
+            ]);
+
+            $user->assignRole($request->role);
+
+            return redirect()->route('master-data.account.index')->with('success', 'Account created successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create account: ' . $e->getMessage()]);
         }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'photo' => $photoName ?? null,
-        ]);
-
-        $user->assignRole($request->role);
-
-        return redirect()->route('master-data.account.index')->with('success', 'Account created successfully.');
     }
 
     public function show($id)
@@ -84,31 +89,39 @@ class AccountController extends Controller
             'role' => 'required|exists:roles,name',
         ]);
 
-        if ($request->hasFile('photo')) {
-            $this->deleteStoredFile($user->photo);
-            $photoName = $this->storeUploadedFile($request->file('photo'), $request->name);
+        try {
+            if ($request->hasFile('photo')) {
+                $this->deleteStoredFile($user->photo);
+                $photoName = $this->storeUploadedFile($request->file('photo'), $request->name);
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
+                'photo' => $photoName ?? $user->photo,
+            ]);
+
+            $user->syncRoles($request->role);
+
+            return redirect()->route('master-data.account.index')->with('success', 'Account updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update account: ' . $e->getMessage()]);
         }
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-            'photo' => $photoName ?? $user->photo,
-        ]);
-
-        $user->syncRoles($request->role);
-
-        return redirect()->route('master-data.account.index')->with('success', 'Account updated successfully.');
     }
 
     public function destroy($id)
     {
         $id = decrypt($id);
         $user = User::findOrFail($id);
-        $this->deleteStoredFile($user->photo);
-        $user->delete();
+        try {
+            $this->deleteStoredFile($user->photo);
+            $user->delete();
 
-        return redirect()->route('master-data.account.index')->with('success', 'Account deleted successfully.');
+            return redirect()->route('master-data.account.index')->with('success', 'Account deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to delete account: ' . $e->getMessage()]);
+        }
     }
 
     private function storeUploadedFile($file, $name): ?string
