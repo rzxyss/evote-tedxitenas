@@ -11,6 +11,7 @@
                 <form action="{{ route('master-data.roles.update', encrypt($role->id)) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    <p>1. Role Information</p>
                     <div class="row">
                         <div class="form-group">
                             <label>Role Name</label>
@@ -18,6 +19,8 @@
                                 value="{{ old('name', $role->name) }}" placeholder="ex: admin">
                         </div>
                     </div>
+                    <hr>
+                    <p>2. Permissions</p>
                     <div class="table-responsive">
                         <table class="table table-lg">
                             <thead>
