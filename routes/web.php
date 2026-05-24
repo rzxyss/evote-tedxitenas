@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $title = 'Dashboard';
     return view('welcome', compact('title'));
-})->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
-Route::prefix('master-data')->name('master-data.')->group(function () {
+Route::prefix('master-data')->name('master-data.')->middleware('auth')->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('account', AccountController::class);

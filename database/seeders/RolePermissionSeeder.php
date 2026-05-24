@@ -19,6 +19,18 @@ class RolePermissionSeeder extends Seeder
         $guard = config('auth.defaults.guard', 'web');
 
         $permissions = [
+            'permission_view',
+            'permission_create',
+            'permission_update',
+            'permission_delete',
+            'role_view',
+            'role_create',
+            'role_update',
+            'role_delete',
+            'account_view',
+            'account_create',
+            'account_update',
+            'account_delete',
             'candidate_view',
             'candidate_create',
             'candidate_update',

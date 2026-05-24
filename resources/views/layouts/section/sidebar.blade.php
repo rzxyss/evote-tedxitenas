@@ -22,27 +22,49 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item @if (request()->routeIs('master-data.*')) active @endif has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
-                        <span>Master Data</span>
-                    </a>
-                    <ul class="submenu @if (request()->routeIs('master-data.*')) active @endif">
-                        <li class="submenu-item @if (request()->routeIs('master-data.permissions.*')) active @endif">
-                            <a href="{{ route('master-data.permissions.index') }}">Permissions</a>
-                        </li>
-                        <li class="submenu-item @if (request()->routeIs('master-data.roles.*')) active @endif">
-                            <a href="{{ route('master-data.roles.index') }}">Roles</a>
-                        </li>
-                        <li class="submenu-item @if (request()->routeIs('master-data.account.*')) active @endif">
-                            <a href="{{ route('master-data.account.index') }}">Account</a>
-                        </li>
-                        <li class="submenu-item @if (request()->routeIs('master-data.candidates.*')) active @endif">
-                            <a href="{{ route('master-data.candidates.index') }}">Candidates</a>
-                        </li>
-                    </ul>
-                </li>
+                @hasanyrole('superadmin|committee')
+                    <li class="sidebar-item @if (request()->routeIs('master-data.*')) active @endif has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Master Data</span>
+                        </a>
+                        <ul class="submenu @if (request()->routeIs('master-data.*')) active @endif">
+                            @can('permission_view')
+                                <li class="submenu-item @if (request()->routeIs('master-data.permissions.*')) active @endif">
+                                    <a href="{{ route('master-data.permissions.index') }}">Permissions</a>
+                                </li>
+                            @endcan
+                            @can('role_view')
+                                <li class="submenu-item @if (request()->routeIs('master-data.roles.*')) active @endif">
+                                    <a href="{{ route('master-data.roles.index') }}">Roles</a>
+                                </li>
+                            @endcan
+                            @can('account_view')
+                                <li class="submenu-item @if (request()->routeIs('master-data.account.*')) active @endif">
+                                    <a href="{{ route('master-data.account.index') }}">Account</a>
+                                </li>
+                            @endcan
+                            @can('candidate_view')
+                                <li class="submenu-item @if (request()->routeIs('master-data.candidates.*')) active @endif">
+                                    <a href="{{ route('master-data.candidates.index') }}">Candidates</a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endhasanyrole
             </ul>
+        </div>
+        <div class="sidebar-footer px-4 py-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex flex-column">
+                    <span class="text-muted" style="font-size: 12px;">Logged in as</span>
+                    <span class="fw-bold">{{ auth()->user()->name }}</span>
+                </div>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Logout</button>
+                </form>
+            </div>
         </div>
         <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
     </div>
