@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/toastify/toastify.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/iconly/bold.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/simple-datatables/style.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/vendors/sweetalert2/sweetalert2.min.css">
 
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -50,6 +51,7 @@
     <script src="{{ asset('assets') }}/vendors/simple-datatables/simple-datatables.js"></script>
     <script src="{{ asset('assets') }}/vendors/choices.js/choices.min.js"></script>
     <script src="{{ asset('assets') }}/vendors/toastify/toastify.js"></script>
+    <script src="{{ asset('assets') }}/vendors/sweetalert2/sweetalert2.all.min.js"></script>
 
     @if (session('success'))
         <script>

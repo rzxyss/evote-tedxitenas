@@ -28,11 +28,10 @@
                                             <a href="{{ route('master-data.roles.edit', encrypt($r->id)) }}"
                                                 class="btn btn-sm btn-warning">Edit</a>
                                             <form action="{{ route('master-data.roles.destroy', encrypt($r->id)) }}"
-                                                method="POST" style="display: inline;">
+                                                method="POST" style="display: inline;" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this role?')">Delete</button>
+                                                <button class="btn btn-sm btn-danger btn-delete">Delete</button>
                                             </form>
                                         </div>
                                     </td>
@@ -52,5 +51,28 @@
     <script>
         let role = document.querySelector('#table-role');
         let dataTable = new simpleDatatables.DataTable(role);
+
+        document.querySelector('#table-role').addEventListener('click', function(e) {
+            const deleteButton = e.target.closest('.btn-delete');
+            if (deleteButton) {
+                e.preventDefault();
+                const form = deleteButton.closest('.delete-form');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
     </script>
 @endpush

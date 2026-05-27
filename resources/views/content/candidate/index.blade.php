@@ -31,11 +31,11 @@
                                             <a href="{{ route('master-data.candidates.edit', encrypt($c->id)) }}"
                                                 class="btn btn-sm btn-warning">Edit</a>
                                             <form action="{{ route('master-data.candidates.destroy', encrypt($c->id)) }}"
-                                                method="POST" style="display: inline;">
+                                                method="POST" style="display: inline;" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this candidate?')">Delete</button>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger btn-delete">Delete</button>
                                             </form>
                                         </div>
                                     </td>
@@ -115,5 +115,28 @@
     <script>
         let candidate = document.querySelector('#table-candidate');
         let dataTable = new simpleDatatables.DataTable(candidate);
+
+        document.querySelector('#table-candidate').addEventListener('click', function(e) {
+            const deleteButton = e.target.closest('.btn-delete');
+            if (deleteButton) {
+                e.preventDefault();
+                const form = deleteButton.closest('.delete-form');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
     </script>
 @endpush
