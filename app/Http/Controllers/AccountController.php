@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 class AccountController extends Controller
@@ -155,5 +157,23 @@ class AccountController extends Controller
         if (Storage::disk('public')->exists($fullPath)) {
             Storage::disk('public')->delete($fullPath);
         }
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new UsersImport, $request->file('file'));
+
+        return back()->with('success', 'Users berhasil diimport');
+    }
+
+    public function download()
+    {
+        $path = public_path('assets/files/template-import.xlsx');
+
+        return response()->download($path);
     }
 }
