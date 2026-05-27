@@ -14,6 +14,7 @@ class AccountController extends Controller
     private const PHOTO_DIR = 'profile';
     public function index()
     {
+        checkingPermission('user_view');
         $data = [
             'title' => 'Account',
             'account' => User::all(),
@@ -23,6 +24,7 @@ class AccountController extends Controller
 
     public function create()
     {
+        checkingPermission('user_create');
         $data = [
             'title' => 'Account',
             'role' => Role::all(),
@@ -32,6 +34,7 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+        checkingPermission('user_create');
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|lowercase|unique:users,email',
@@ -67,6 +70,7 @@ class AccountController extends Controller
 
     public function edit($id)
     {
+        checkingPermission('user_update');
         $id = decrypt($id);
         $data = [
             'title' => 'Account',
@@ -79,6 +83,7 @@ class AccountController extends Controller
 
     public function update(Request $request, $id)
     {
+        checkingPermission('user_update');
         $id = decrypt($id);
         $user = User::findOrFail($id);
         $request->validate([
@@ -112,6 +117,7 @@ class AccountController extends Controller
 
     public function destroy($id)
     {
+        checkingPermission('user_delete');
         $id = decrypt($id);
         $user = User::findOrFail($id);
         try {

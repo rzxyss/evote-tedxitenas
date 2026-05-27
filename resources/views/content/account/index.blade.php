@@ -6,8 +6,10 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>{{ $title }} List</h4>
-                    <a href="{{ route('master-data.account.create') }}" class="btn btn-primary">Create
-                        {{ $title }}</a>
+                    @can('user_create')
+                        <a href="{{ route('master-data.account.create') }}" class="btn btn-primary">Create
+                            {{ $title }}</a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table-account">
@@ -28,15 +30,19 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('master-data.account.edit', encrypt($a->id)) }}"
-                                                class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="{{ route('master-data.account.destroy', encrypt($a->id)) }}"
-                                                method="POST" style="display: inline;" class="delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-danger btn-delete">Delete</button>
-                                            </form>
+                                            @can('user_update')
+                                                <a href="{{ route('master-data.account.edit', encrypt($a->id)) }}"
+                                                    class="btn btn-sm btn-warning">Edit</a>
+                                            @endcan
+                                            @can('user_delete')
+                                                <form action="{{ route('master-data.account.destroy', encrypt($a->id)) }}"
+                                                    method="POST" style="display: inline;" class="delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-danger btn-delete">Delete</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </td>
                                     <td>{{ $a->name }}</td>

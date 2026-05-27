@@ -13,6 +13,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        checkingPermission('vote_view');
         $title = 'Dashboard';
 
         $totalCandidates = Candidate::count();
@@ -68,6 +69,7 @@ class DashboardController extends Controller
 
     public function vote($id)
     {
+        checkingPermission('vote_create');
         $id = decrypt($id);
 
         if (Auth::user()->has_voted == '1') {

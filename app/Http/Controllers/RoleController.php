@@ -11,6 +11,7 @@ class RoleController extends Controller
 {
     public function index()
     {
+        checkingPermission('role_view');
         $data = [
             'title' => 'Roles',
             'role' => Role::with('permissions')->get(),
@@ -21,6 +22,7 @@ class RoleController extends Controller
 
     public function create()
     {
+        checkingPermission('role_create');
         $data = [
             'title' => 'Roles',
             'permissions' => Permission::orderBy('name')->get()
@@ -34,6 +36,7 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
+        checkingPermission('role_create');
         $request->validate([
             'name' => 'required|string|unique:roles,name',
             'permissions' => 'array',
@@ -61,6 +64,7 @@ class RoleController extends Controller
 
     public function edit($id)
     {
+        checkingPermission('role_update');
         $id = decrypt($id);
 
         $role = Role::with('permissions')->findOrFail($id);
@@ -82,6 +86,7 @@ class RoleController extends Controller
 
     public function update(Request $request, $id)
     {
+        checkingPermission('role_update');
         $id = decrypt($id);
         $request->validate([
             'name' => 'required|string|unique:roles,name,' . $id,
@@ -105,6 +110,7 @@ class RoleController extends Controller
 
     public function destroy($id)
     {
+        checkingPermission('role_delete');
         $id = decrypt($id);
         try {
             $role = Role::findOrFail($id);

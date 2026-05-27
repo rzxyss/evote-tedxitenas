@@ -10,6 +10,7 @@ class PermissionController extends Controller
 {
     public function index()
     {
+        checkingPermission('permission_view');
         $data = [
             'title' => 'Permissions',
             'permission' => Permission::all(),
@@ -19,6 +20,7 @@ class PermissionController extends Controller
 
     public function create()
     {
+        checkingPermission('permission_create');
         $data = [
             'title' => 'Permissions',
         ];
@@ -27,6 +29,7 @@ class PermissionController extends Controller
 
     public function store(Request $request)
     {
+        checkingPermission('permission_create');
         $request->validate([
             'name' => 'required|string|unique:permissions,name',
         ]);
@@ -50,6 +53,7 @@ class PermissionController extends Controller
 
     public function edit($id)
     {
+        checkingPermission('permission_update');
         $id = decrypt($id);
         $data = [
             'title' => 'Permissions',
@@ -61,6 +65,7 @@ class PermissionController extends Controller
 
     public function update(Request $request, $id)
     {
+        checkingPermission('permission_update');
         $id = decrypt($id);
         $request->validate([
             'name' => 'required|string|unique:permissions,name,' . $id,
@@ -80,6 +85,7 @@ class PermissionController extends Controller
 
     public function destroy($id)
     {
+        checkingPermission('permission_delete');
         $id = decrypt($id);
         try {
             $permission = Permission::findOrFail($id);

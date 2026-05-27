@@ -6,7 +6,9 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>{{ $title }} List</h4>
-                    <a href="{{ route('master-data.roles.create') }}" class="btn btn-primary">Create {{ $title }}</a>
+                    @can('role_create')
+                        <a href="{{ route('master-data.roles.create') }}" class="btn btn-primary">Create {{ $title }}</a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table-role">
@@ -25,14 +27,18 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('master-data.roles.edit', encrypt($r->id)) }}"
-                                                class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="{{ route('master-data.roles.destroy', encrypt($r->id)) }}"
-                                                method="POST" style="display: inline;" class="delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-delete">Delete</button>
-                                            </form>
+                                            @can('role_update')
+                                                <a href="{{ route('master-data.roles.edit', encrypt($r->id)) }}"
+                                                    class="btn btn-sm btn-warning">Edit</a>
+                                            @endcan
+                                            @can('role_delete')
+                                                <form action="{{ route('master-data.roles.destroy', encrypt($r->id)) }}"
+                                                    method="POST" style="display: inline;" class="delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-danger btn-delete">Delete</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </td>
                                     <td>{{ $r->name }}</td>

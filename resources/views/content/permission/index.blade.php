@@ -6,8 +6,10 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>{{ $title }} List</h4>
-                    <a href="{{ route('master-data.permissions.create') }}" class="btn btn-primary">Create
-                        {{ $title }}</a>
+                    @can('permission_create')
+                        <a href="{{ route('master-data.permissions.create') }}" class="btn btn-primary">Create
+                            {{ $title }}</a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table-permission">
@@ -26,14 +28,18 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('master-data.permissions.edit', encrypt($p->id)) }}"
-                                                class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="{{ route('master-data.permissions.destroy', encrypt($p->id)) }}"
-                                                method="POST" style="display: inline;" class="delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-delete">Delete</button>
-                                            </form>
+                                            @can('permission_update')
+                                                <a href="{{ route('master-data.permissions.edit', encrypt($p->id)) }}"
+                                                    class="btn btn-sm btn-warning">Edit</a>
+                                            @endcan
+                                            @can('permission_delete')
+                                                <form action="{{ route('master-data.permissions.destroy', encrypt($p->id)) }}"
+                                                    method="POST" style="display: inline;" class="delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-danger btn-delete">Delete</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </td>
                                     <td>{{ $p->name }}</td>

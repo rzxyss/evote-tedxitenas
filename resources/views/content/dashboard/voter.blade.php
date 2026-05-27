@@ -34,8 +34,13 @@
                         <div class="col-xl-3 col-lg-4 col-md-6 col-12 d-flex justify-content-center">
                             <div class="card candidate-card shadow-sm">
                                 <div class="card-content">
-                                    <img class="candidate-image" src="{{ asset('storage/profile/' . $c->user->photo) }}"
-                                        alt="Card image cap">
+                                    @if ($c->user->photo)
+                                        <img class="candidate-image"
+                                            src="{{ asset('storage/profile/' . $c->user->photo) }}" alt="Card image cap">
+                                    @else
+                                        <img class="candidate-image" src="{{ asset('assets/images/default.png') }}"
+                                            alt="Card image cap">
+                                    @endif
 
                                     <div class="card-body text-center">
                                         <h4 class="card-title">{{ $c->user->name }}</h4>
@@ -108,15 +113,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mt-2">
-                                            <form action="{{ route('vote', encrypt($c->id)) }}" method="POST"
-                                                class="vote-form">
-                                                @csrf
-                                                <button type="button" class="btn btn-outline-success block btn-vote">
-                                                    Vote
-                                                </button>
-                                            </form>
-                                        </div>
+                                        @can('vote_create')
+                                            <div class="mt-2">
+                                                <form action="{{ route('vote', encrypt($c->id)) }}" method="POST"
+                                                    class="vote-form">
+                                                    @csrf
+                                                    <button type="button" class="btn btn-outline-success block btn-vote">
+                                                        Vote
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>

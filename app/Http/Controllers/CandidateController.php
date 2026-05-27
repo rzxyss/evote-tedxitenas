@@ -13,6 +13,7 @@ class CandidateController extends Controller
     private const BOOKLET_DIR = 'booklet';
     public function index()
     {
+        checkingPermission('candidate_view');
         $data = [
             'title' => 'Candidates',
             'candidates' => Candidate::with('user')->get(),
@@ -22,6 +23,7 @@ class CandidateController extends Controller
 
     public function create()
     {
+        checkingPermission('candidate_create');
         $data = [
             'title' => 'Candidates',
             'users' => User::all(),
@@ -31,6 +33,7 @@ class CandidateController extends Controller
 
     public function store(Request $request)
     {
+        checkingPermission('candidate_create');
         $request->validate([
             'user' => 'required|exists:users,id',
             'booklet' => 'required|file|mimes:pdf|max:10240',
@@ -60,6 +63,7 @@ class CandidateController extends Controller
 
     public function edit($id)
     {
+        checkingPermission('candidate_update');
         $id = decrypt($id);
         $data = [
             'title' => 'Candidates',
@@ -71,6 +75,7 @@ class CandidateController extends Controller
 
     public function update(Request $request, $id)
     {
+        checkingPermission('candidate_update');
         $id = decrypt($id);
         $request->validate([
             'booklet' => 'nullable|file|mimes:pdf|max:10240',
@@ -96,6 +101,7 @@ class CandidateController extends Controller
 
     public function destroy($id)
     {
+        checkingPermission('candidate_delete');
         $id = decrypt($id);
         try {
             $candidate = Candidate::findOrFail($id);
