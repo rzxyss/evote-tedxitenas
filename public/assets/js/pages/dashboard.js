@@ -18,7 +18,7 @@ var optionsProfileVisit = {
 		name: 'sales',
 		data: [9,20,30,20,10,20,30,20,10,20,30,20]
 	}],
-	colors: '#435ebe',
+	colors: '#003366',
 	xaxis: {
 		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
 	},
@@ -26,7 +26,7 @@ var optionsProfileVisit = {
 let optionsVisitorsProfile  = {
 	series: [70, 30],
 	labels: ['Male', 'Female'],
-	colors: ['#435ebe','#55c6e8'],
+	colors: ['#003366','#66cccc'],
 	chart: {
 		type: 'donut',
 		width: '100%',
@@ -56,7 +56,7 @@ var optionsEurope = {
 			show:false,
 		},
 	},
-	colors: ['#5350e9'],
+	colors: ['#663366'],
 	stroke: {
 		width: 2,
 	},
@@ -94,11 +94,11 @@ var optionsEurope = {
 
 let optionsAmerica = {
 	...optionsEurope,
-	colors: ['#008b75'],
+	colors: ['#66cccc'],
 }
 let optionsIndonesia = {
 	...optionsEurope,
-	colors: ['#dc3545'],
+	colors: ['#eb0028'],
 }
 
 

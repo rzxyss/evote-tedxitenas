@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/bootstrap.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/app.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/css/tedx-theme.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/pages/error.css">
 </head>
 
