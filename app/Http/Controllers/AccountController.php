@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Imports\UsersImport;
+use App\Mail\AccountCredentialMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
@@ -14,6 +16,7 @@ use Spatie\Permission\Models\Role;
 class AccountController extends Controller
 {
     private const PHOTO_DIR = 'profile';
+    private const DEFAULT_PASSWORD = 'tedxitenas2025';
     public function index()
     {
         checkingPermission('user_view');
@@ -175,5 +178,37 @@ class AccountController extends Controller
         $path = public_path('assets/files/template-import.xlsx');
 
         return response()->download($path);
+    }
+
+    public function blastCredentials()
+    {
+        checkingPermission('user_update');
+
+        try {
+            $accounts = User::whereNotNull('email')
+                ->where('email', '!=', '')
+                ->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'superadmin');
+                })
+                ->get();
+
+            $sentCount = 0;
+
+            foreach ($accounts as $account) {
+                $account->update([
+                    'password' => Hash::make(self::DEFAULT_PASSWORD),
+                ]);
+
+                Mail::to($account->email)->send(new AccountCredentialMail($account, self::DEFAULT_PASSWORD));
+                $sentCount++;
+            }
+
+            return redirect()->route('master-data.account.index')
+                ->with('success', $sentCount . ' account email(s) sent successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors([
+                'error' => 'Failed to blast account emails: ' . $e->getMessage(),
+            ]);
+        }
     }
 }

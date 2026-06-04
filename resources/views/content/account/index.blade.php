@@ -6,14 +6,21 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>{{ $title }} List</h4>
-                    @can('user_create')
-                        <div class="d-flex flex-md-row flex-column gap-2">
+                    <div class="d-flex flex-md-row flex-column gap-2">
+                        @can('user_create')
                             <button class="btn btn-success btn-import" data-bs-toggle="modal"
                                 data-bs-target="#importModal">Import</button>
                             <a href="{{ route('master-data.account.create') }}" class="btn btn-primary">Create
                                 {{ $title }}</a>
-                        </div>
-                    @endcan
+                        @endcan
+                        @can('user_update')
+                            <form action="{{ route('master-data.account.blast-credentials') }}" method="POST"
+                                class="blast-form ms-auto">
+                                @csrf
+                                <button type="submit" class="btn btn-warning mt-2 mt-md-0">Blast Credentials</button>
+                            </form>
+                        @endcan
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table-account">
@@ -160,5 +167,27 @@
                 });
             }
         });
+
+        const blastForm = document.querySelector('.blast-form');
+        if (blastForm) {
+            blastForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Blast Account Emails?',
+                    text: 'This will reset each user password to the default value and send their account email.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d97706',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, send now',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        blastForm.submit();
+                    }
+                });
+            });
+        }
     </script>
 @endpush
