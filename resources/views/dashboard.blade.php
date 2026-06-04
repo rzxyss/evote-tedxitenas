@@ -11,7 +11,7 @@
 @push('scripts')
     <script>
         document.addEventListener('click', function(e) {
-            const voteButton = e.target.closest('.btn-vote');
+            const voteButton = e.target.closest('.btn-agree, .btn-disagree');
             if (voteButton) {
                 e.preventDefault();
                 const form = voteButton.closest('.vote-form');

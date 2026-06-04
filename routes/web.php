@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/vote/{id}', [DashboardController::class, 'vote'])->name('vote');
+    Route::post('/vote/disagree/{id}', [DashboardController::class, 'voteDisagree'])->name('vote-disagree');
 });
 
 Route::prefix('master-data')->name('master-data.')->middleware('auth')->group(function () {

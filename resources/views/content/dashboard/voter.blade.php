@@ -114,12 +114,20 @@
                                             </div>
                                         </div>
                                         @can('vote_create')
-                                            <div class="mt-2">
+                                            <div class="mt-2 d-flex flex-md-row flex-column justify-content-center gap-2">
                                                 <form action="{{ route('vote', encrypt($c->id)) }}" method="POST"
                                                     class="vote-form">
                                                     @csrf
-                                                    <button type="button" class="btn btn-outline-success block btn-vote">
-                                                        Vote
+                                                    <button type="button" class="btn btn-outline-success block btn-agree">
+                                                        Agree
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('vote-disagree', encrypt($c->id)) }}" method="POST"
+                                                    class="vote-form">
+                                                    @csrf
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger block btn-disagree">
+                                                        Disagree
                                                     </button>
                                                 </form>
                                             </div>

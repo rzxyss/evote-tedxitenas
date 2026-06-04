@@ -28,8 +28,8 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <h6 class="text-muted font-semibold">Total Votes</h6>
-                                <h6 class="font-extrabold mb-0">{{ $totalVotes ?? 0 }}</h6>
+                                <h6 class="text-muted font-semibold">Total Agree</h6>
+                                <h6 class="font-extrabold mb-0">{{ $totalAgree ?? ($totalVotes ?? 0) }}</h6>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Candidate Name</th>
-                                        <th>Total Votes</th>
+                                        <th>Total Agree</th>
+                                        <th>Total Disagree</th>
                                         <th>Progress</th>
                                         <th>Percentage</th>
                                     </tr>
@@ -134,6 +135,9 @@
                                             </td>
                                             <td class="col-auto">
                                                 <div class="badge bg-light-info">{{ $result['votes'] ?? 0 }}</div>
+                                            </td>
+                                            <td class="col-auto">
+                                                <div class="badge bg-light-danger">{{ $totalDisagree ?? 0 }}</div>
                                             </td>
                                             <td class="col-auto">
                                                 <div class="progress" data-height="8" style="height: 8px;">
@@ -190,16 +194,18 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-around text-center">
                             <div>
-                                <h5 class="text-muted">Votes Cast</h5>
-                                <h3 class="text-primary font-bold">{{ $totalVotes ?? 0 }}</h3>
+                                <h5 class="text-muted">Total Agree</h5>
+                                <h3 class="text-primary font-bold">{{ $totalAgree ?? ($totalVotes ?? 0) }}</h3>
                             </div>
                             <div>
-                                <h5 class="text-muted">Total Eligible</h5>
-                                <h3 class="text-success font-bold">{{ $totalVoters ?? 0 }}</h3>
+                                <h5 class="text-muted">Total Disagree</h5>
+                                <h3 class="text-danger font-bold">{{ $totalDisagree ?? 0 }}</h3>
                             </div>
                             <div>
                                 <h5 class="text-muted">Remaining</h5>
-                                <h3 class="text-warning font-bold">{{ ($totalVoters ?? 0) - ($totalVotes ?? 0) }}</h3>
+                                <h3 class="text-warning font-bold">
+                                    {{ ($totalVoters ?? 0) - (($totalAgree ?? ($totalVotes ?? 0)) + ($totalDisagree ?? 0)) }}
+                                </h3>
                             </div>
                         </div>
                     </div>

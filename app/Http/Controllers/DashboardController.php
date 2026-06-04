@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $title = 'Dashboard';
 
         $totalCandidates = Candidate::count();
-        $totalVotes = Vote::count();
+        $totalAgree = Vote::count();
 
         $totalEligibleVoters = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'superadmin');
@@ -27,6 +27,9 @@ class DashboardController extends Controller
             ->whereDoesntHave('roles', function ($query) {
                 $query->where('name', 'superadmin');
             })->count();
+
+        $totalDisagree = max($votedUsers - $totalAgree, 0);
+        $totalResponses = $totalAgree + $totalDisagree;
 
         $notVoted = $totalEligibleVoters - $votedUsers;
 
@@ -40,12 +43,12 @@ class DashboardController extends Controller
             ->select('id', 'user_id')
             ->with('user:id,name')
             ->get()
-            ->map(function ($candidate) use ($totalVotes) {
+            ->map(function ($candidate) use ($totalResponses) {
                 $votes = $candidate->votes->count();
                 return [
                     'name' => $candidate->user->name,
                     'votes' => $votes,
-                    'percentage' => $totalVotes > 0 ? round(($votes / $totalVotes) * 100, 2) : 0
+                    'percentage' => $totalResponses > 0 ? round(($votes / $totalResponses) * 100, 2) : 0
                 ];
             })
             ->sortByDesc('votes')
@@ -56,7 +59,9 @@ class DashboardController extends Controller
             'title'              => $title,
             'candidate'          => Candidate::with('user')->get(),
             'totalCandidates'    => $totalCandidates,
-            'totalVotes'         => $totalVotes,
+            'totalAgree'         => $totalAgree,
+            'totalVotes'         => $totalAgree,
+            'totalDisagree'      => $totalDisagree,
             'totalVoters'        => $totalEligibleVoters,
             'participationRate'  => $participationRate . '%',
             'notVoted'           => $notVoted,
@@ -82,6 +87,22 @@ class DashboardController extends Controller
         Vote::create([
             'candidate_id' => $candidate->id,
         ]);
+
+        Auth::user()->update(['has_voted' => '1']);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Thank you for voting!');
+    }
+
+    public function voteDisagree($id)
+    {
+        checkingPermission('vote_create');
+        $id = decrypt($id);
+
+        if (Auth::user()->has_voted == '1') {
+            return redirect()->route('dashboard')
+                ->withErrors(['error' => 'You have already cast your vote!']);
+        }
 
         Auth::user()->update(['has_voted' => '1']);
 
